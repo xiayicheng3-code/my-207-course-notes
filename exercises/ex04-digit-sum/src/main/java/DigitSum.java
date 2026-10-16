@@ -22,6 +22,12 @@ public class DigitSum {
      */
     public static int digitSum(int n) {
         // TODO: complete
-        return 0;
+        int sum = 0;
+        for (char c : String.valueOf(n).toCharArray()) {
+            if (Character.isDigit(c)) {
+                sum += Character.getNumericValue(c);
+            }
+        }
+        return sum;
     }
 }
