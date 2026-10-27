@@ -109,7 +109,17 @@ public class NumberTriangle {
     //       value of wherever you ended up. An empty path means "stay here".
     //       Hint: String#charAt(int) and String#length() are all you need for the
     //       iterative version; a recursive version can use String#substring(1).
-    return 0;
+    NumberTriangle current = this;
+    if (path.isEmpty()) {
+      return this.root;
+    }
+    if (current.left != null && path.charAt(0) == 'l') {
+      return current.left.retrieve(path.substring(1));
+    } else if (current.right != null && path.charAt(0) == 'r') {
+      return current.right.retrieve(path.substring(1));
+    } else {
+      return current.getRoot();
+    }
   }
 
   /**
@@ -173,13 +183,15 @@ public class NumberTriangle {
 
     // We need to return the top of the NumberTriangle, so here is a variable for it.
     NumberTriangle top = null;
+    NumberTriangle[] last = new NumberTriangle[1];
+    NumberTriangle[] buffer;
 
-    String line = br.readLine();
+
+    String line = br.readLine().trim();
+    top = new NumberTriangle(Integer.parseInt(line));
+    last[0] = top;
+    line = br.readLine();
     while (line != null) {
-
-      // Remove this line when you are done; it is here so that the starter code
-      // prints the contents of the file when you run it.
-      System.out.println(line);
 
       // TODO: process the line. Splitting it on spaces gives you the numbers in
       //       this row; make a NumberTriangle for each one, then wire this row up
@@ -187,7 +199,21 @@ public class NumberTriangle {
       //       right child of one node is the left child of the next node over.
 
       // read the next line
+      String[] numbers = line.split(" ");
+      buffer = new NumberTriangle[numbers.length];
+      for (int i = 0; i < numbers.length; i++) {
+        NumberTriangle current = new NumberTriangle(Integer.parseInt(numbers[i]));
+        if (i < numbers.length - 1) {
+          last[i].setLeft(current);
+        }
+        if (i > 0) {
+          last[i - 1].setRight(current);
+        }
+        buffer[i] = current;
+      }
+      last = buffer;
       line = br.readLine();
+
     }
     br.close();
     return top;
