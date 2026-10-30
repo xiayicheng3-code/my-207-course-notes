@@ -25,21 +25,60 @@ abstract class Item {
   - catalogueNumber : String
   + getTitle() : String
   + getCatalogueNumber() : String
+  + final type : String
+  + Item(title : String, catalogueNumber : String, type : String)
 }
 
+class BorrowableItem extends Item{
+  + maxLoanPeriod : int
+  + {static} final MAX_BOOK_LOAN_PERIOD = 21 : int
+  + {static} final MAX_DVD_LOAN_PERIOD = 7 : int
+  - currentBorrow : BorrowRecord
+  - currentHolds : Hold[]
+  + borrow(member : Member)
+  + returnItem(member : Member)
+  + holdItem(member : Member)
+}
 ' TODO: add boxes for Book and DVD. What differs between them — a whole class,
 '       or just the value of a loan-period field?
 
 ' TODO: reference-only items cannot be borrowed at all. Decide how to say that
 '       in the diagram: a subclass, or an interface (e.g. "Borrowable") that
 '       only some items realize?
+class BorrowRecord{
+  borrower : Member
+  StartDate : date
+}
 
 ' TODO: add Member and Librarian. What do they have in common? Add the common
 '       supertype if you think one is warranted.
 
+class Member{
+  - memberNumber : long
+  + lateFee : int
+}
+
+class Librarian{
+  + waive(member : Member)
+  + addItem(item : Item)
+}
+
+class Library{
+  LibraryMembers : Member[]
+  librarians : Librarian[]
+  items : Item[]
+}
 ' TODO: add whatever represents a hold, and connect it to the classes that need
 '       to know about it.
-
+class Hold{
+  - member : Member
+  + Hold(member : Member)
+}
 ' TODO: add the arrows between all of your types.
-
+Hold -> Member
+BorrowableItem -> Hold
+BorrowableItem -> BorrowRecord
+Library -> Member
+Library -> Librarian
+Library -> Item
 @enduml
